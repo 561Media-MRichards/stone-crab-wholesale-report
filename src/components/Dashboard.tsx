@@ -66,9 +66,9 @@ export function Dashboard() {
 
         <MetricsCards metrics={metrics} />
 
-        <PerformanceChart data={filteredData} />
-
         <DataTable data={filteredData} />
+
+        <PerformanceChart data={filteredData} />
 
         {/* Footer */}
         <footer className="mt-8 text-center text-sm text-[#7a8f9d]">
