@@ -21,6 +21,16 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
       highlight: 'green',
     },
     {
+      label: 'Total Ad Spend',
+      value: formatCurrency(metrics.totalSpend),
+      icon: (
+        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+      ),
+      highlight: 'blue',
+    },
+    {
       label: 'Cost Per Acquisition',
       value: formatCurrency(metrics.cpa),
       subtext: 'per conversion',
@@ -46,15 +56,6 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
 
   // Secondary metrics
   const secondaryCards = [
-    {
-      label: 'Total Ad Spend',
-      value: formatCurrency(metrics.totalSpend),
-      icon: (
-        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-        </svg>
-      ),
-    },
     {
       label: 'Total Conversions',
       value: formatNumber(metrics.totalConversions),
@@ -139,7 +140,7 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
         <h3 className="text-sm font-medium text-[#7a8f9d] uppercase tracking-wide mb-3">
           Acquisition Performance
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {primaryCards.map((card) => {
             const classes = getHighlightClasses(card.highlight);
             return (
@@ -166,7 +167,7 @@ export function MetricsCards({ metrics }: MetricsCardsProps) {
         <h3 className="text-sm font-medium text-[#7a8f9d] uppercase tracking-wide mb-3">
           Performance Details
         </h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {secondaryCards.map((card) => (
             <div
               key={card.label}
