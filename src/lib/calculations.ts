@@ -1,4 +1,4 @@
-import { MonthlyData, KPIMetrics, PlatformFilter } from './types';
+import { MonthlyData, KPIMetrics, PlatformFilter, GroupedMonthData, SortConfig, SortField } from './types';
 
 export function calculateKPIs(data: MonthlyData[]): KPIMetrics {
   const activeData = data.filter(d => d.source !== 'paused' && d.conversions !== null);
@@ -102,4 +102,152 @@ export function getDataWithMOM(data: MonthlyData[]): (MonthlyData & { momGrowth:
       : null;
     return { ...item, momGrowth };
   });
+}
+
+/**
+ * Groups data by month, combining multiple platform entries into single rows
+ * with combined totals and a breakdown array for expansion
+ */
+export function groupDataByMonth(data: MonthlyData[]): GroupedMonthData[] {
+  // Create a map keyed by "month-year" to group entries
+  const monthMap = new Map<string, MonthlyData[]>();
+
+  for (const entry of data) {
+    const key = `${entry.year}-${entry.monthIndex}`;
+    if (!monthMap.has(key)) {
+      monthMap.set(key, []);
+    }
+    monthMap.get(key)!.push(entry);
+  }
+
+  // Convert map to array of GroupedMonthData
+  const grouped: GroupedMonthData[] = [];
+
+  for (const [, entries] of monthMap) {
+    // Filter out paused entries for calculations
+    const activeEntries = entries.filter(e => e.source !== 'paused');
+
+    // If all entries are paused, still include the month but with null/zero values
+    const isPaused = activeEntries.length === 0;
+
+    const firstEntry = entries[0];
+
+    // Sum up all metrics from active entries
+    const impressions = activeEntries.reduce((sum, e) => sum + (e.impressions || 0), 0);
+    const clicks = activeEntries.reduce((sum, e) => sum + (e.clicks || 0), 0);
+    const spend = activeEntries.reduce((sum, e) => sum + (e.spend || 0), 0);
+    const conversions = activeEntries.reduce((sum, e) => sum + (e.conversions || 0), 0);
+    const conversionValue = activeEntries.reduce((sum, e) => sum + (e.conversionValue || 0), 0);
+
+    // Calculate CPA and ROAS from combined values
+    const cpa = conversions > 0 ? spend / conversions : 0;
+    const roas = spend > 0 ? conversionValue / spend : 0;
+
+    grouped.push({
+      month: firstEntry.month,
+      year: firstEntry.year,
+      monthIndex: firstEntry.monthIndex,
+      impressions: isPaused ? 0 : impressions,
+      clicks: isPaused ? 0 : clicks,
+      spend: isPaused ? 0 : spend,
+      conversions: isPaused ? 0 : conversions,
+      conversionValue: isPaused ? 0 : conversionValue,
+      cpa: isPaused ? 0 : cpa,
+      roas: isPaused ? 0 : roas,
+      momGrowth: null, // Will be calculated after sorting
+      breakdown: entries,
+      isExpanded: false,
+    });
+  }
+
+  // Sort by date (year, monthIndex) for proper MOM calculation
+  grouped.sort((a, b) => {
+    if (a.year !== b.year) return a.year - b.year;
+    return a.monthIndex - b.monthIndex;
+  });
+
+  // Calculate MOM growth based on combined conversion values
+  for (let i = 1; i < grouped.length; i++) {
+    const current = grouped[i];
+    const previous = grouped[i - 1];
+
+    // Skip MOM for paused months
+    const currentPaused = current.breakdown.every(e => e.source === 'paused');
+    const previousPaused = previous.breakdown.every(e => e.source === 'paused');
+
+    if (!currentPaused && !previousPaused && previous.conversionValue > 0) {
+      current.momGrowth = calculateMOMGrowth(current.conversionValue, previous.conversionValue);
+    }
+  }
+
+  return grouped;
+}
+
+/**
+ * Sorts grouped data by the specified field and direction
+ */
+export function sortGroupedData(data: GroupedMonthData[], config: SortConfig): GroupedMonthData[] {
+  const sorted = [...data];
+
+  sorted.sort((a, b) => {
+    let aVal: number;
+    let bVal: number;
+
+    switch (config.field) {
+      case 'month':
+        // Sort by year then monthIndex
+        if (a.year !== b.year) {
+          aVal = a.year;
+          bVal = b.year;
+        } else {
+          aVal = a.monthIndex;
+          bVal = b.monthIndex;
+        }
+        break;
+      case 'impressions':
+        aVal = a.impressions;
+        bVal = b.impressions;
+        break;
+      case 'clicks':
+        aVal = a.clicks;
+        bVal = b.clicks;
+        break;
+      case 'spend':
+        aVal = a.spend;
+        bVal = b.spend;
+        break;
+      case 'conversions':
+        aVal = a.conversions;
+        bVal = b.conversions;
+        break;
+      case 'conversionValue':
+        aVal = a.conversionValue;
+        bVal = b.conversionValue;
+        break;
+      case 'cpa':
+        aVal = a.cpa;
+        bVal = b.cpa;
+        break;
+      case 'roas':
+        aVal = a.roas;
+        bVal = b.roas;
+        break;
+      case 'momGrowth':
+        // Handle null values - put them at the end
+        aVal = a.momGrowth ?? (config.direction === 'asc' ? Infinity : -Infinity);
+        bVal = b.momGrowth ?? (config.direction === 'asc' ? Infinity : -Infinity);
+        break;
+      default:
+        aVal = 0;
+        bVal = 0;
+    }
+
+    if (config.direction === 'asc') {
+      return aVal - bVal;
+    } else {
+      return bVal - aVal;
+    }
+  });
+
+  return sorted;
 }

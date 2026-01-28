@@ -15,14 +15,18 @@ export function Dashboard() {
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
   const [selectedPlatform, setSelectedPlatform] = useState<PlatformFilter>('all');
 
+  // Year filter applies to everything
   const yearFilteredData = filterDataByYear(monthlyData, selectedYear);
-  const filteredData = filterDataByPlatform(yearFilteredData, selectedPlatform);
-  const metrics = calculateKPIs(filteredData);
 
-  const totalActiveMonths = filteredData.filter((d) => d.source !== 'paused').length;
-  const pausedMonths = filteredData.filter((d) => d.source === 'paused').length;
-  const shopifyMonths = filteredData.filter((d) => d.source === 'shopify').length;
-  const metaMonths = filteredData.filter((d) => d.source === 'meta_ads').length;
+  // Platform filter only applies to KPIs and chart
+  const platformFilteredData = filterDataByPlatform(yearFilteredData, selectedPlatform);
+  const metrics = calculateKPIs(platformFilteredData);
+
+  // Stats are based on year-filtered data (all platforms)
+  const totalActiveMonths = yearFilteredData.filter((d) => d.source !== 'paused').length;
+  const pausedMonths = yearFilteredData.filter((d) => d.source === 'paused').length;
+  const shopifyMonths = yearFilteredData.filter((d) => d.source === 'shopify').length;
+  const metaMonths = yearFilteredData.filter((d) => d.source === 'meta_ads').length;
 
   return (
     <div className="min-h-screen bg-[#0b2430]">
@@ -77,9 +81,11 @@ export function Dashboard() {
 
         <MetricsCards metrics={metrics} />
 
-        <DataTable data={filteredData} />
+        {/* Table always shows all platforms (grouped) - only year filter applies */}
+        <DataTable data={yearFilteredData} />
 
-        <PerformanceChart data={filteredData} />
+        {/* Chart respects platform filter */}
+        <PerformanceChart data={platformFilteredData} />
 
         {/* Footer */}
         <footer className="mt-8 text-center text-sm text-[#7a8f9d]">

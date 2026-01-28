@@ -30,3 +30,33 @@ export interface KPIMetrics {
   cpa: number;
   roas: number;
 }
+
+// Sorting types
+export type SortField = 'month' | 'impressions' | 'clicks' | 'spend' | 'conversions' | 'conversionValue' | 'cpa' | 'roas' | 'momGrowth';
+export type SortDirection = 'asc' | 'desc';
+
+export interface SortConfig {
+  field: SortField;
+  direction: SortDirection;
+}
+
+// Grouped data for combining multiple platforms in the same month
+export interface GroupedMonthData {
+  month: string;
+  year: number;
+  monthIndex: number;
+  // Combined totals
+  impressions: number;
+  clicks: number;
+  spend: number;
+  conversions: number;
+  conversionValue: number;
+  // Calculated metrics
+  cpa: number;
+  roas: number;
+  momGrowth: number | null;
+  // Breakdown by platform
+  breakdown: MonthlyData[];
+  // UI state
+  isExpanded?: boolean;
+}
