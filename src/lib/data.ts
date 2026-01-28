@@ -169,6 +169,153 @@ export const monthlyData: MonthlyData[] = [
     conversionValue: 6882.48,
     source: 'google_ads',
   },
+  // Meta Ads Data
+  // 2024
+  {
+    month: 'January 2024',
+    year: 2024,
+    monthIndex: 0,
+    impressions: 1361033,
+    clicks: 16732, // calculated from spend/CPC
+    spend: 20307.25,
+    conversions: 238,
+    conversionValue: 38066.92,
+    source: 'meta_ads',
+  },
+  {
+    month: 'February 2024',
+    year: 2024,
+    monthIndex: 1,
+    impressions: 666665,
+    clicks: 10298, // calculated from spend/CPC
+    spend: 12440.58,
+    conversions: 194,
+    conversionValue: 33635.09,
+    source: 'meta_ads',
+  },
+  {
+    month: 'March 2024',
+    year: 2024,
+    monthIndex: 2,
+    impressions: 315754,
+    clicks: 3876, // calculated from spend/CPC
+    spend: 5849.22,
+    conversions: 55,
+    conversionValue: 8627.95,
+    source: 'meta_ads',
+  },
+  {
+    month: 'May 2024',
+    year: 2024,
+    monthIndex: 4,
+    impressions: 31113,
+    clicks: 459, // calculated from spend/CPC
+    spend: 886.47,
+    conversions: 2,
+    conversionValue: 696.14,
+    source: 'meta_ads',
+  },
+  {
+    month: 'June 2024',
+    year: 2024,
+    monthIndex: 5,
+    impressions: 7845,
+    clicks: 156, // calculated from spend/CPC
+    spend: 250.52,
+    conversions: 1,
+    conversionValue: 174.97,
+    source: 'meta_ads',
+  },
+  {
+    month: 'December 2024',
+    year: 2024,
+    monthIndex: 11,
+    impressions: 21709,
+    clicks: 347, // calculated from spend/CPC
+    spend: 868.82,
+    conversions: 19,
+    conversionValue: 3773.94,
+    source: 'meta_ads',
+  },
+  // 2025
+  {
+    month: 'January 2025',
+    year: 2025,
+    monthIndex: 0,
+    impressions: 102461,
+    clicks: 805, // calculated from spend/CPC
+    spend: 3065.10,
+    conversions: 51,
+    conversionValue: 10808.80,
+    source: 'meta_ads',
+  },
+  {
+    month: 'February 2025',
+    year: 2025,
+    monthIndex: 1,
+    impressions: 99325,
+    clicks: 598, // calculated from spend/CPC
+    spend: 2778.02,
+    conversions: 26,
+    conversionValue: 5403.42,
+    source: 'meta_ads',
+  },
+  {
+    month: 'March 2025',
+    year: 2025,
+    monthIndex: 2,
+    impressions: 10634,
+    clicks: 47, // calculated from spend/CPC
+    spend: 267.86,
+    conversions: 1,
+    conversionValue: 199.96,
+    source: 'meta_ads',
+  },
+  {
+    month: 'October 2025',
+    year: 2025,
+    monthIndex: 9,
+    impressions: 11232,
+    clicks: 539, // calculated from spend/CPC
+    spend: 567.21,
+    conversions: 13,
+    conversionValue: 3258.89,
+    source: 'meta_ads',
+  },
+  {
+    month: 'November 2025',
+    year: 2025,
+    monthIndex: 10,
+    impressions: 38766,
+    clicks: 1537, // calculated from spend/CPC
+    spend: 1804.38,
+    conversions: 44,
+    conversionValue: 11464.20,
+    source: 'meta_ads',
+  },
+  {
+    month: 'December 2025',
+    year: 2025,
+    monthIndex: 11,
+    impressions: 37463,
+    clicks: 1471, // calculated from spend/CPC
+    spend: 1853.30,
+    conversions: 62,
+    conversionValue: 17740.46,
+    source: 'meta_ads',
+  },
+  // 2026
+  {
+    month: 'January 2026',
+    year: 2026,
+    monthIndex: 0,
+    impressions: 51772,
+    clicks: 1356, // calculated from spend/CPC
+    spend: 1630.76,
+    conversions: 32,
+    conversionValue: 9237.96,
+    source: 'meta_ads',
+  },
 ];
 
 export const availableYears = [2024, 2025, 2026];

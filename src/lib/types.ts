@@ -1,4 +1,6 @@
-export type DataSource = 'google_ads' | 'shopify' | 'paused';
+export type DataSource = 'google_ads' | 'shopify' | 'paused' | 'meta_ads';
+
+export type PlatformFilter = 'all' | 'google_ads' | 'meta_ads';
 
 export interface MonthlyData {
   month: string;

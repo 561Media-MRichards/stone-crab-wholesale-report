@@ -35,6 +35,10 @@ export function YearMonthFilter({ selectedYear, onYearChange }: YearMonthFilterP
           <span className="text-[#7a8f9d]">Google Ads</span>
         </span>
         <span className="inline-flex items-center gap-2">
+          <span className="w-3 h-3 rounded-full bg-[#9b59b6]"></span>
+          <span className="text-[#7a8f9d]">Meta Ads</span>
+        </span>
+        <span className="inline-flex items-center gap-2">
           <span className="w-3 h-3 rounded-full bg-[#EC6A2A]"></span>
           <span className="text-[#7a8f9d]">Shopify Data</span>
         </span>

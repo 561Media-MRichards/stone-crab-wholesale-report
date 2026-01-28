@@ -62,6 +62,7 @@ export function DataTable({ data }: DataTableProps) {
             {dataWithMOM.map((row) => {
               const isPaused = row.source === 'paused';
               const isShopify = row.source === 'shopify';
+              const isMeta = row.source === 'meta_ads';
 
               // Calculate per-row metrics
               const cpa = row.conversions && row.spend
@@ -73,12 +74,14 @@ export function DataTable({ data }: DataTableProps) {
 
               return (
                 <tr
-                  key={row.month}
+                  key={`${row.month}-${row.source}`}
                   className={`transition-colors ${
                     isPaused
                       ? 'bg-[#1a3648]/30'
                       : isShopify
                       ? 'bg-[#EC6A2A]/5 hover:bg-[#EC6A2A]/10'
+                      : isMeta
+                      ? 'bg-[#9b59b6]/5 hover:bg-[#9b59b6]/10'
                       : 'hover:bg-[#1a3648]/50'
                   }`}
                 >
@@ -93,6 +96,10 @@ export function DataTable({ data }: DataTableProps) {
                     ) : isShopify ? (
                       <span className="inline-flex px-2.5 py-1 text-xs rounded-full bg-[#EC6A2A]/20 text-[#EC6A2A] border border-[#EC6A2A]/30">
                         Shopify
+                      </span>
+                    ) : isMeta ? (
+                      <span className="inline-flex px-2.5 py-1 text-xs rounded-full bg-[#9b59b6]/20 text-[#9b59b6] border border-[#9b59b6]/30">
+                        Meta Ads
                       </span>
                     ) : (
                       <span className="inline-flex px-2.5 py-1 text-xs rounded-full bg-[#54baf8]/20 text-[#54baf8] border border-[#54baf8]/30">

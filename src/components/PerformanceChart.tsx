@@ -23,6 +23,8 @@ const getBarColor = (source: string) => {
   switch (source) {
     case 'google_ads':
       return '#54baf8';
+    case 'meta_ads':
+      return '#9b59b6';
     case 'shopify':
       return '#EC6A2A';
     case 'paused':
@@ -58,9 +60,11 @@ const CustomTooltip = ({ active, payload, label }: any) => {
               <span className={`inline-block px-2 py-0.5 rounded text-xs ${
                 data.source === 'shopify'
                   ? 'bg-[#EC6A2A]/20 text-[#EC6A2A]'
+                  : data.source === 'meta_ads'
+                  ? 'bg-[#9b59b6]/20 text-[#9b59b6]'
                   : 'bg-[#54baf8]/20 text-[#54baf8]'
               }`}>
-                {data.source === 'shopify' ? 'Shopify Data' : 'Google Ads'}
+                {data.source === 'shopify' ? 'Shopify Data' : data.source === 'meta_ads' ? 'Meta Ads' : 'Google Ads'}
               </span>
             </p>
           </>

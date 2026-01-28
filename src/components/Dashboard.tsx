@@ -3,21 +3,26 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { monthlyData } from '@/lib/data';
-import { calculateKPIs, filterDataByYear } from '@/lib/calculations';
+import { calculateKPIs, filterDataByYear, filterDataByPlatform } from '@/lib/calculations';
+import { PlatformFilter } from '@/lib/types';
 import { MetricsCards } from './MetricsCards';
 import { YearMonthFilter } from './YearMonthFilter';
+import { PlatformTabs } from './PlatformTabs';
 import { PerformanceChart } from './PerformanceChart';
 import { DataTable } from './DataTable';
 
 export function Dashboard() {
   const [selectedYear, setSelectedYear] = useState<number | 'all'>('all');
+  const [selectedPlatform, setSelectedPlatform] = useState<PlatformFilter>('all');
 
-  const filteredData = filterDataByYear(monthlyData, selectedYear);
+  const yearFilteredData = filterDataByYear(monthlyData, selectedYear);
+  const filteredData = filterDataByPlatform(yearFilteredData, selectedPlatform);
   const metrics = calculateKPIs(filteredData);
 
   const totalActiveMonths = filteredData.filter((d) => d.source !== 'paused').length;
   const pausedMonths = filteredData.filter((d) => d.source === 'paused').length;
   const shopifyMonths = filteredData.filter((d) => d.source === 'shopify').length;
+  const metaMonths = filteredData.filter((d) => d.source === 'meta_ads').length;
 
   return (
     <div className="min-h-screen bg-[#0b2430]">
@@ -55,6 +60,11 @@ export function Dashboard() {
                   {shopifyMonths} Shopify
                 </div>
               )}
+              {metaMonths > 0 && (
+                <div className="bg-[#9b59b6]/20 px-3 py-1.5 rounded-lg text-[#9b59b6] border border-[#9b59b6]/30">
+                  {metaMonths} Meta
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -63,6 +73,7 @@ export function Dashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <YearMonthFilter selectedYear={selectedYear} onYearChange={setSelectedYear} />
+        <PlatformTabs selectedPlatform={selectedPlatform} onPlatformChange={setSelectedPlatform} />
 
         <MetricsCards metrics={metrics} />
 
@@ -74,7 +85,7 @@ export function Dashboard() {
         <footer className="mt-8 text-center text-sm text-[#7a8f9d]">
           <p>
             Data sources: Google Ads (Nov 2024 - Jun 2025, Dec 2025 - Jan 2026) |
-            Shopify Attribution (Oct - Nov 2025)
+            Shopify Attribution (Oct - Nov 2025) | Meta Ads (Jan 2024 - Jan 2026)
           </p>
           <p className="mt-1">
             Jul - Sep 2025: Campaign paused for seasonal product

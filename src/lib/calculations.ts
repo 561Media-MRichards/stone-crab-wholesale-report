@@ -1,4 +1,4 @@
-import { MonthlyData, KPIMetrics } from './types';
+import { MonthlyData, KPIMetrics, PlatformFilter } from './types';
 
 export function calculateKPIs(data: MonthlyData[]): KPIMetrics {
   const activeData = data.filter(d => d.source !== 'paused' && d.conversions !== null);
@@ -53,6 +53,25 @@ export function filterDataByYear(data: MonthlyData[], year: number | 'all'): Mon
 export function filterDataByMonths(data: MonthlyData[], months: number[]): MonthlyData[] {
   if (months.length === 0) return data;
   return data.filter(d => months.includes(d.monthIndex));
+}
+
+export function filterDataByPlatform(data: MonthlyData[], platform: PlatformFilter): MonthlyData[] {
+  if (platform === 'all') return data;
+  return data.filter(d => d.source === platform || d.source === 'paused');
+}
+
+export function calculateKPIsByPlatform(data: MonthlyData[]): Record<string, KPIMetrics> {
+  const platforms = ['google_ads', 'meta_ads', 'shopify'] as const;
+  const result: Record<string, KPIMetrics> = {};
+
+  for (const platform of platforms) {
+    const platformData = data.filter(d => d.source === platform);
+    if (platformData.length > 0) {
+      result[platform] = calculateKPIs(platformData);
+    }
+  }
+
+  return result;
 }
 
 export function formatCurrency(value: number): string {
